@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateChatGptDto } from './dto/create-chat-gpt.dto';
 import { lastValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
@@ -13,7 +13,7 @@ export class ChatGptService {
   constructor(
     private readonly httpService: HttpService,
     @InjectRepository(chat_gpt) private readonly chatRepository: Repository<chat_gpt>,
-  ) {}
+  ) { }
 
   async create(createChatDto: CreateChatGptDto): Promise<string> {
     const { email, name, description, budget, objetive } = createChatDto;
@@ -34,19 +34,19 @@ export class ChatGptService {
         this.httpService.post(
           'https://api.openai.com/v1/chat/completions',
           {
-            model: 'gpt-3.5-turbo', 
+            model: 'gpt-3.5-turbo',
             messages: [
               { role: 'system', content: "Actúa como un asistente especializado en la creación de propuestas de negocios." },
               { role: 'user', content: prompt },
             ],
             max_tokens: 1500,
-            temperature: 0.7, 
+            temperature: 0.7,
           },
           {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${process.env.OPENAI_API_TOKEN}`
-          }
+            }
           },
         ),
       );
@@ -56,7 +56,7 @@ export class ChatGptService {
       const newChat = this.chatRepository.create({
         email,
         name,
-        description: generatedDescription, 
+        description: generatedDescription,
         budget,
         objetive
       });
@@ -73,4 +73,27 @@ export class ChatGptService {
       throw new Error('No se pudo generar la propuesta de negocio en este momento.');
     }
   }
+
+  async findAllByEmail(email: string) {
+    const proposals = await this.chatRepository.find({ where: { email } });
+
+    if (!proposals.length) {
+      throw new NotFoundException(`No existen propuestas para este correo`);
+    }
+
+    return proposals;
+  }
+
+  async remove(id: number) {
+    const existingPro = await this.chatRepository.findOne({ where: { id } });
+
+    if (!existingPro) {
+      throw new NotFoundException(`La propuesta con el ID ${id} no existe`);
+    }
+
+    await this.chatRepository.remove(existingPro);
+    return existingPro;
+  }
+
+
 }

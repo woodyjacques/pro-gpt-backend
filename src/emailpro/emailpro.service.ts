@@ -16,7 +16,8 @@ export class EmailproService {
     const personalizedHtml = htmlTemplate
       .replace('{{name}}', emailUser)
       .replace('{{token}}', url)
-      .replace('{{text}}', text);
+      .replace('{{text}}', text)
+      .replace('{{email}}', email);
 
     await this.mailerService.sendMail({
       to: email,
