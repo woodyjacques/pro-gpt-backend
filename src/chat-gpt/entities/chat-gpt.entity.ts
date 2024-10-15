@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
-export class ChatGpt {
+export class chat_gpt {
     @PrimaryGeneratedColumn()
     id: number;
     @Column()

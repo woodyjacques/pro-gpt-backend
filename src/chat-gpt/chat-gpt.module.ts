@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ChatGptService } from './chat-gpt.service';
 import { ChatGptController } from './chat-gpt.controller';
-import { ChatGpt } from './entities/chat-gpt.entity';
+import { chat_gpt } from './entities/chat-gpt.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ChatGpt]),
+    TypeOrmModule.forFeature([chat_gpt]),
     HttpModule,
   ],
   controllers: [ChatGptController],

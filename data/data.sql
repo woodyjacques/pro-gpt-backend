@@ -8,7 +8,7 @@ CREATE TABLE userprogpt (
     UNIQUE KEY email (email)
 );
 
-CREATE TABLE ChatGpt (
+CREATE TABLE chat_gpt (
     id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,

@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as path from 'path';
 import { useContainer } from 'class-validator';
+import 'dotenv/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -39,7 +40,8 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
+  const port =  process.env.PORT || 4000; 
   app.useStaticAssets(path.join(__dirname, '../uploads'));
-  await app.listen(4000);
+  await app.listen(port);
 }
 bootstrap();

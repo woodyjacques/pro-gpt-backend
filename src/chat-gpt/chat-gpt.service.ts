@@ -5,14 +5,14 @@ import { lastValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ChatGpt } from './entities/chat-gpt.entity';
+import { chat_gpt } from './entities/chat-gpt.entity';
 import 'dotenv/config';
 
 @Injectable()
 export class ChatGptService {
   constructor(
     private readonly httpService: HttpService,
-    @InjectRepository(ChatGpt) private readonly chatRepository: Repository<ChatGpt>,
+    @InjectRepository(chat_gpt) private readonly chatRepository: Repository<chat_gpt>,
   ) {}
 
   async create(createChatDto: CreateChatGptDto): Promise<string> {
@@ -58,7 +58,7 @@ export class ChatGptService {
         name,
         description: generatedDescription, 
         budget,
-        objetive,
+        objetive
       });
       await this.chatRepository.save(newChat);
 
